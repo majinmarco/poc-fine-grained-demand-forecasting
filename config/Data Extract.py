@@ -48,11 +48,15 @@ from pathlib import Path
 # Creating user-specific paths and database names
 useremail = dbutils.notebook.entry_point.getDbutils().notebook().getContext().userName().get()
 username_sql_compatible = re.sub('\W', '_', useremail.split('@')[0])
-tmp_data_path = f"/tmp/fine_grain_forecast/data/{useremail}/"
-database_name = f"fine_grain_forecast_{username_sql_compatible}"
+tmp_data_path = f"gs://marco_databricks/tmp/fine_grained_forecast/data/"
+database_name = f"marco_data.fine_grain_forecast_{username_sql_compatible}"
 
 # Create user-scoped environment
 spark.sql(f"DROP DATABASE IF EXISTS {database_name} CASCADE")
-spark.sql(f"CREATE DATABASE {database_name} LOCATION '{tmp_data_path}'")
+spark.sql(f"CREATE DATABASE {database_name} MANAGED LOCATION '{tmp_data_path}'")
 spark.sql(f"USE {database_name}")
 Path(tmp_data_path).mkdir(parents=True, exist_ok=True)
+
+# COMMAND ----------
+
+
